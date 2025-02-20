@@ -1,0 +1,33 @@
+---
+import { type MenuItem, getMenuService } from '../menu-service';
+
+export const prerender = false;
+
+const service = getMenuService();
+const items = await service.getItems();
+const eatenItems = await service.getEatenItems();
+
+if (Astro.request.method === 'POST') {
+	const data = await Astro.request.formData();
+	const item = data.get('name');
+
+	service.markItemAsEaten(item as string);
+}
+---
+
+{
+	items.map(({ name }) => (
+		<form method="POST" style={{ display: 'block' }}>
+			<label>
+				<input
+					type="checkbox"
+					name="name"
+					value={name}
+					checked={eatenItems.has(name)}
+					onchange="this.form.submit()"
+				/>
+				{name}
+			</label>
+		</form>
+	))
+}

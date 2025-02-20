@@ -1,7 +1,7 @@
 #### Cheese Cake Menu Tracker
 
 - [x] I want to see all the cheesecake factory menu items
-- [ ] I want to mark menu items as eaten
+- [x] I want to mark menu items as eaten
 - [ ] I want to filter the menu by items I haven’t eaten
 
 Stretch

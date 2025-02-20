@@ -28,6 +28,31 @@ export class EatenItemsFake implements EatenItemsStore {
 	}
 }
 
+export class EatenItemsLocalStorage implements EatenItemsStore {
+	getEatenItems() {
+		const stored = localStorage.getItem('cheesecake-factory:eaten-items');
+
+		if (!stored) {
+			return new Set<string>();
+		}
+
+		return new Set<string>(JSON.parse(stored));
+	}
+
+	async markItemAsEaten(name: string) {
+		const items = this.getEatenItems();
+
+		items.add(name);
+
+		localStorage.setItem(
+			'cheesecake-factory:eaten-items',
+			JSON.stringify([...items]),
+		);
+
+		return true;
+	}
+}
+
 export class CheeseCakeFactoryMenuClient implements MenuClient {
 	async getItems(): Promise<Array<MenuItem>> {
 		const res = await fetch(
@@ -89,8 +114,10 @@ export class MenuService {
 	}
 }
 
+const eatenItems = new EatenItemsFake();
+
 export function getMenuService() {
 	const client = new CheeseCakeFactoryMenuClient();
 
-	return new MenuService(client, new EatenItemsFake());
+	return new MenuService(client, eatenItems);
 }
